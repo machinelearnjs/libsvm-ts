@@ -1,4 +1,5 @@
-import { getCommand } from "../src/Util";
+import {getCommand} from "../src/Util";
+import {KernelTypes, SVMTypes} from "../src/types/Commands";
 
 describe('util', () => {
 
@@ -14,11 +15,11 @@ describe('util', () => {
     });
 
     it('should get type', () => {
-      expect(getCommand({type: 0})).toBe('-s 0');
+      expect(getCommand({type: SVMTypes.C_SVC})).toBe('-s 0');
     });
 
     it('should get kernel', () => {
-      expect(getCommand({kernel: 2})).toBe('-t 2');
+      expect(getCommand({kernel: KernelTypes.LINEAR})).toBe('-t 0');
     });
 
     it('should get degree', () => {
