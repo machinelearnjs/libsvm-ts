@@ -17,9 +17,14 @@ Resources about libsvm:
 
 
 # Usage
-## Install
+## Install using npm
 ```bash
-npm install libsvm-js
+npm install libsvm-ts
+```
+
+## Install using yarn
+```bash
+yarn add libsvm-ts
 ```
 
 ## Load in nodejs
