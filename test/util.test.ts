@@ -45,6 +45,30 @@ describe('util', () => {
       expect(getCommand({ shrinking: true })).toBe('-h 1');
       expect(getCommand({ shrinking: false })).toBe('-h 0');
     });
+
+    it('should get nu', () => {
+      expect(getCommand({ nu: 0.5 })).toBe('-n 0.5');
+    });
+
+    it('should get tolerance', () => {
+      expect(getCommand({ tolerance: 0.001 })).toBe('-e 0.001');
+    });
+
+    it('should get weight', () => {
+      expect(getCommand({
+        weight: {
+          1: 3,
+          2: 5,
+        }
+      })).toEqual('-w1 3 -w2 5');
+    });
+
+    it('should get mixed commands', () => {
+      expect(getCommand({
+        degree: 2,
+        shrinking: true,
+      })).toEqual('-d 2 -h 1');
+    });
   });
 
 });
