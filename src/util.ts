@@ -17,25 +17,6 @@ const mapOptionToCommand = {
   weight: 'w'
 };
 
-/*
-enum Commands {
-  quiet = 'q',
-  type = 's',
-  kernel = 't',
-  degree = 'd',
-  gamma = 'g',
-  coef0 = 'r',
-  cost = 'c',
-  nu = 'n',
-  epsilon = 'p',
-  cacheSize = 'm',
-  tolerance = 'e',
-  shrinking = 'h',
-  probabilityEstimates = 'b',
-  weight = 'w'
-}
-*/
-
 interface Arguments {
   quiet?: boolean;
   type?: number;
