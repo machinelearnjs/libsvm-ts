@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (libsvm) {
-  const util = require('./util');
+  const util = require('./Util');
 
   /* eslint-disable camelcase */
   const predict_one = libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);

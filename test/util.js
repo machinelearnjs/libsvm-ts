@@ -1,5 +1,5 @@
 'use strict';
-const util = require('../src/util');
+const util = require('../src/Util');
 describe('util', function () {
     it('should return proper command string', function () {
         util.getCommand({

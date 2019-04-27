@@ -1,4 +1,4 @@
-import { getCommand } from "../src/util";
+import { getCommand } from "../src/Util";
 
 describe('util', () => {
 
