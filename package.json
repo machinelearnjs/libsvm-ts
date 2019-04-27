@@ -1,7 +1,7 @@
 {
-  "name": "libsvm-js",
-  "version": "0.2.1",
-  "description": "A port of libsvm to javascript using emscripten",
+  "name": "libsvm-ts",
+  "version": "0.0.0",
+  "description": "A port of libsvm to Typescript using emscripten",
   "main": "wasm.js",
   "files": [
     "src",
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mljs/libsvm.git"
+    "url": "git@github.com:machinelearnjs/libsvm-ts.git"
   },
   "keywords": [
     "svm",
@@ -43,12 +43,12 @@
     "vector",
     "machines"
   ],
-  "author": "Daniel Kostro <kostro.d@gmail.com>",
+  "author": "Jason Shin <visualbbasic@gmail.com>",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/mljs/libsvm/issues"
+    "url": "https://github.com/machinelearnjs/libsvm-ts/issues"
   },
-  "homepage": "https://github.com/mljs/libsvm#readme",
+  "homepage": "https://github.com/machinelearnjs/libsvm-ts#readme",
   "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.26.0",
