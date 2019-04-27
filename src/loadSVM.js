@@ -58,6 +58,8 @@ module.exports = function (libsvm) {
     train(samples, labels) {
       if (this._deserialized) throw new Error('Train cannot be called on instance created with SVM.load');
       this.free();
+
+      console.log('samepls', samples, ' labels ', labels);
       this.problem = createProblem(samples, labels);
       const command = this.getCommand(samples);
       this.model = train_problem(this.problem, command);

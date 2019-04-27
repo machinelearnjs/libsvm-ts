@@ -20,17 +20,21 @@ const mapOptionToCommand = {
 export function getCommand(options) {
   let str = '';
   const keys = Object.keys(options);
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
-    if (options[key] == null) continue;
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    if (options[key] == null) {
+      continue;
+    }
     if (mapOptionToCommand[key] == null) {
       throw new UtilError('Bad option');
     }
 
+    // Adding an empty space before append a new command
     if (str) {
       str += ' ';
     }
 
+    // Handling each key
     switch (key) {
       case 'probabilityEstimates':
       case 'shrinking':
@@ -45,7 +49,9 @@ export function getCommand(options) {
       case 'weight': {
         const weightKeys = Object.keys(options.weight);
         for (let j = 0; j < weightKeys.length; j++) {
-          if (j !== 0) str += ' ';
+          if (j !== 0) {
+            str += ' ';
+          }
           str += `-w${weightKeys[j]} ${options.weight[weightKeys[j]]}`;
         }
         break;

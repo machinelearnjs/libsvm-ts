@@ -21,11 +21,13 @@ module.exports = {
   getCommand: function getCommand(options) {
     var str = '';
     var keys = Object.keys(options);
+    console.log('checking options', options);
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
       if (options[key] == null) continue;
       if (mapOptionToCommand[key] == null) throw new Error('Bad option');
       if (str) str += ' ';
+      console.log('checkingstr', str);
       switch (key) {
         case 'probabilityEstimates':
         case 'shrinking':

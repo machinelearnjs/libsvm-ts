@@ -54,6 +54,7 @@
   "homepage": "https://github.com/machinelearnjs/libsvm-ts#readme",
   "dependencies": {},
   "devDependencies": {
+    "@types/jest": "24.0.11",
     "@types/node": "8.9.4",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.3",
@@ -81,6 +82,7 @@
     "font-awesome-webpack": "^0.0.5-beta.2",
     "gh-pages": "^1.1.0",
     "imports-loader": "^0.7.1",
+    "jest": "24.7.1",
     "jquery": "^3.2.1",
     "jsdoc-to-markdown": "^3.0.3",
     "less": "^2.7.3",
@@ -112,6 +114,7 @@
     "should": "^11.2.0",
     "style-loader": "^0.18.2",
     "tether": "^1.4.3",
+    "ts-jest": "24.0.2",
     "typescript": "3.4.1",
     "url-loader": "^0.5.9",
     "webpack": "^3.11.0",
@@ -119,5 +122,23 @@
     "webpack-dev-server": "^2.9.7",
     "webpack-visualizer-plugin": "^0.1.11",
     "worker-loader": "^0.8.1"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/test/.*\\.test.(ts|tsx|js)$",
+    "verbose": true,
+    "testEnvironment": "node"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "@types/node"
+    ]
   }
 }
