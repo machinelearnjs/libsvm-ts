@@ -1,3 +1,16 @@
+# libsvm-ts history
+
+## [0.0.0]
+
+### Bug Fixes
+
+* No longer depends on a git submodule, which causes an error while installing it using npm without `git init`
+
+
+----
+
+# libsvm-js history
+
 <a name="0.2.1"></a>
 ## [0.2.1](https://github.com/mljs/libsvm/compare/v0.2.0...v0.2.1) (2018-05-24)
 
