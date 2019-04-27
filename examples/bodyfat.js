@@ -3,9 +3,20 @@
 const fs = require('fs');
 const path = require('path');
 
-const SVM = require('../asm');
+const SVM = require('../wasm');
 
-let data = fs.readFileSync(
+SVM.then((S) => {
+  const svm = new S({
+    type: 'C_SVC',
+    kernel: 'LINEAR',
+    epsilon: 0.001,
+    quiet: false,
+    probabilityEstimates: true
+  });
+  svm.train(['test'], [1]);
+});
+
+/*let data = fs.readFileSync(
   path.join(__dirname, './bodyfat_scale.txt'),
   'utf-8'
 );
@@ -26,3 +37,5 @@ console.log(svm.predictInterval(features, 0.99));
 fs.writeFileSync(path.join(__dirname, 'bodyfat.model'), svm.serializeModel());
 
 // svm.crossValidation(features, labels);
+*/
+
