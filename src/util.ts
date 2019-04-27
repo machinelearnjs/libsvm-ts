@@ -17,7 +17,43 @@ const mapOptionToCommand = {
   weight: 'w'
 };
 
-export function getCommand(options) {
+/*
+enum Commands {
+  quiet = 'q',
+  type = 's',
+  kernel = 't',
+  degree = 'd',
+  gamma = 'g',
+  coef0 = 'r',
+  cost = 'c',
+  nu = 'n',
+  epsilon = 'p',
+  cacheSize = 'm',
+  tolerance = 'e',
+  shrinking = 'h',
+  probabilityEstimates = 'b',
+  weight = 'w'
+}
+*/
+
+interface Arguments {
+  quiet?: boolean;
+  type?: number;
+  kernel?: number;
+  degree?: number;
+  gamma?: string;
+  coef0?: number;
+  cost?: number;
+  nu?: number;
+  epsilon?: number;
+  cacheSize?: number;
+  tolerance?: number;
+  shrinking?: boolean;
+  probabilityEstimates?: boolean;
+  weight?: { [n: number]: number };
+}
+
+export function getCommand(options: Arguments) {
   let str = '';
   const keys = Object.keys(options);
   for (let i = 0; i < keys.length; i++) {
