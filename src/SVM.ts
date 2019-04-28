@@ -1,7 +1,7 @@
 import libsvm from '../out/wasm/libsvm';
-import {CommandArguments} from "./types/Commands";
-import { SVMError } from "./Errors";
-import {getCommand} from "./Util";
+import { CommandArguments } from './types/Commands';
+import { SVMError } from './Errors';
+import { getCommand } from './Util';
 
 export class SVM {
   private predict_one;
@@ -24,9 +24,14 @@ export class SVM {
   private deserialized: boolean;
   private problem;
 
-  constructor(args: { options: CommandArguments, model: any }) {
+  constructor(args: { options: CommandArguments; model: any }) {
     this.predict_one = libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);
-    this.predict_one_probability = libsvm.cwrap('libsvm_predict_one_probability', 'number', ['number', 'array', 'number', 'number']);
+    this.predict_one_probability = libsvm.cwrap('libsvm_predict_one_probability', 'number', [
+      'number',
+      'array',
+      'number',
+      'number',
+    ]);
     this.add_instance = libsvm.cwrap('add_instance', null, ['number', 'array', 'number', 'number', 'number']);
     this.create_svm_nodes = libsvm.cwrap('create_svm_nodes', 'number', ['number', 'number']);
     this.train_problem = libsvm.cwrap('libsvm_train_problem', 'number', ['number', 'string']);
@@ -45,7 +50,7 @@ export class SVM {
     this.model = model;
   }
 
-  train(args: { samples, labels }) {
+  train(args: { samples; labels }) {
     if (this.deserialized) {
       throw new SVMError('Cannot train a deserialized model');
     }
@@ -55,7 +60,7 @@ export class SVM {
     this.model = this.train_problem(this.problem, command);
   }
 
-  private createProblem(args: { samples, labels }) {
+  private createProblem(args: { samples; labels }) {
     const { samples, labels } = args;
     const nbSamples = samples.length;
     const nbFeatures = labels.length;

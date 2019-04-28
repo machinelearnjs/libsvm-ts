@@ -3,7 +3,7 @@ export enum SVMTypes {
   NU_SVC = 'NU_SVC', // NU support vector classification
   ONE_CLASS = 'ONE_CLASS', // ONE CLASS classification
   EPSILON_SVR = 'EPSILON_SVR', // Epsilon support vector regression
-  NU_SVR = 'NU_SVR' // Nu support vector regression
+  NU_SVR = 'NU_SVR', // Nu support vector regression
 }
 
 export enum KernelTypes {
@@ -11,7 +11,7 @@ export enum KernelTypes {
   POLYNOMIAL = 'POLYNOMIAL',
   RBF = 'RBF', // Radial basis function
   SIGMOID = 'SIGMOID',
-  PRECOMPUTED = 'PRECOMPUTED'
+  PRECOMPUTED = 'PRECOMPUTED',
 }
 
 export interface CommandArguments {

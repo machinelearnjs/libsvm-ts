@@ -1,5 +1,5 @@
-import { UtilError } from "./Errors";
-import {CommandArguments} from "./types/Commands";
+import { UtilError } from './Errors';
+import { CommandArguments } from './types/Commands';
 
 const mapOptionToCommand = {
   quiet: 'q',
@@ -15,10 +15,10 @@ const mapOptionToCommand = {
   tolerance: 'e',
   shrinking: 'h',
   probabilityEstimates: 'b',
-  weight: 'w'
+  weight: 'w',
 };
 
- /**
+/**
  * SVM classification and regression types
  * @memberof SVM
  * @type {{C_SVC: string, NU_SVC: string, ONE_CLASS: string, EPSILON_SVR: string, NU_SVR: string}}
@@ -33,7 +33,7 @@ const mapSVMTypesToValue = {
   NU_SVC: '1', // NU support vector classification
   ONE_CLASS: '2', // ONE CLASS classification
   EPSILON_SVR: '3', // Epsilon support vector regression
-  NU_SVR: '4' // Nu support vector regression
+  NU_SVR: '4', // Nu support vector regression
 };
 
 /**
@@ -50,7 +50,7 @@ const mapKernelTypesToValue = {
   POLYNOMIAL: '1',
   RBF: '2', // Radial basis function
   SIGMOID: '3',
-  PRECOMPUTED: '4'
+  PRECOMPUTED: '4',
 };
 
 export function getCommand(options: CommandArguments) {
@@ -93,7 +93,7 @@ export function getCommand(options: CommandArguments) {
         break;
       }
       case 'kernel':
-        console.log('kernel', mapOptionToCommand[key], '  ',  options[key], '  ', mapKernelTypesToValue[options[key]]);
+        console.log('kernel', mapOptionToCommand[key], '  ', options[key], '  ', mapKernelTypesToValue[options[key]]);
         str += `-${mapOptionToCommand[key]} ${mapKernelTypesToValue[options[key]]}`;
         break;
       case 'type':
@@ -108,4 +108,3 @@ export function getCommand(options: CommandArguments) {
 
   return str;
 }
-

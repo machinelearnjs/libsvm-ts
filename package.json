@@ -31,7 +31,8 @@
     "prepare": "git submodule init && git submodule update",
     "start": "webpack-dev-server --config webpack/webpack.config.js",
     "test": "npm run test-mocha && npm run eslint",
-    "test-mocha": "mocha --require should --recursive test"
+    "test-mocha": "mocha --require should --recursive test",
+    "pretty:fix": "npx prettier \"src/**/*.ts\" \"test/**/*.ts\" --config ./.prettierrc.json --write"
   },
   "repository": {
     "type": "git",
@@ -98,6 +99,7 @@
     "npm-run-all": "^4.1.2",
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",
+    "prettier": "1.10.2",
     "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "react-icons": "^2.2.7",
@@ -115,6 +117,8 @@
     "style-loader": "^0.18.2",
     "tether": "^1.4.3",
     "ts-jest": "24.0.2",
+    "tslint": "5.4.3",
+    "tslint-config-prettier": "1.8.0",
     "typescript": "3.4.1",
     "url-loader": "^0.5.9",
     "webpack": "^3.11.0",

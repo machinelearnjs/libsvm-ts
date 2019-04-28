@@ -1,29 +1,28 @@
-import {getCommand} from "../src/Util";
-import {KernelTypes, SVMTypes} from "../src/types/Commands";
+import { getCommand } from '../src/Util';
+import { KernelTypes, SVMTypes } from '../src/types/Commands';
 
 describe('util', () => {
-
   describe('.getCommand(...)', () => {
     it('should get quiet', () => {
-      expect(getCommand({quiet: true})).toBe('-q 1');
-      expect(getCommand({quiet: false})).toBe('');
+      expect(getCommand({ quiet: true })).toBe('-q 1');
+      expect(getCommand({ quiet: false })).toBe('');
     });
 
     it('should get probabilityEstimates', () => {
-      expect(getCommand({probabilityEstimates: true})).toBe('-b 1');
-      expect(getCommand({probabilityEstimates: false})).toBe('-b 0');
+      expect(getCommand({ probabilityEstimates: true })).toBe('-b 1');
+      expect(getCommand({ probabilityEstimates: false })).toBe('-b 0');
     });
 
     it('should get type', () => {
-      expect(getCommand({type: SVMTypes.C_SVC})).toBe('-s 0');
+      expect(getCommand({ type: SVMTypes.C_SVC })).toBe('-s 0');
     });
 
     it('should get kernel', () => {
-      expect(getCommand({kernel: KernelTypes.LINEAR})).toBe('-t 0');
+      expect(getCommand({ kernel: KernelTypes.LINEAR })).toBe('-t 0');
     });
 
     it('should get degree', () => {
-      expect(getCommand({degree: 2})).toBe('-d 2');
+      expect(getCommand({ degree: 2 })).toBe('-d 2');
     });
 
     it('should get cost', () => {
@@ -56,20 +55,23 @@ describe('util', () => {
     });
 
     it('should get weight', () => {
-      expect(getCommand({
-        weight: {
-          1: 3,
-          2: 5,
-        }
-      })).toEqual('-w1 3 -w2 5');
+      expect(
+        getCommand({
+          weight: {
+            1: 3,
+            2: 5,
+          },
+        }),
+      ).toEqual('-w1 3 -w2 5');
     });
 
     it('should get mixed commands', () => {
-      expect(getCommand({
-        degree: 2,
-        shrinking: true,
-      })).toEqual('-d 2 -h 1');
+      expect(
+        getCommand({
+          degree: 2,
+          shrinking: true,
+        }),
+      ).toEqual('-d 2 -h 1');
     });
   });
-
 });
