@@ -17,3 +17,9 @@ export const SVMError = function(message) {
   this.name = this.constructor.name;
   this.message = message;
 };
+
+export const WASMError = function(message) {
+  Error.captureStackTrace(this, this.constructor);
+  this.name = this.constructor.name;
+  this.message = message;
+};

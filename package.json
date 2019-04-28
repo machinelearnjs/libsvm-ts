@@ -132,6 +132,7 @@
     "worker-loader": "^0.8.1"
   },
   "jest": {
+    "preset": "ts-jest",
     "moduleFileExtensions": [
       "ts",
       "tsx",
