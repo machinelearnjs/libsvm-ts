@@ -1,6 +1,6 @@
 import libsvm from '../out/wasm/libsvm';
-import { CommandArguments } from './types/Commands';
 import { SVMError } from './Errors';
+import { CommandArguments } from './types/Commands';
 import { getCommand } from './Util';
 
 export class SVM {

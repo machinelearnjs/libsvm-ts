@@ -1,5 +1,5 @@
-import { getCommand } from '../src/Util';
 import { KernelTypes, SVMTypes } from '../src/types/Commands';
+import { getCommand } from '../src/Util';
 
 describe('util', () => {
   describe('.getCommand(...)', () => {

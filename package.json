@@ -32,7 +32,10 @@
     "start": "webpack-dev-server --config webpack/webpack.config.js",
     "test": "npm run test-mocha && npm run eslint",
     "test-mocha": "mocha --require should --recursive test",
-    "pretty:fix": "npx prettier \"src/**/*.ts\" \"test/**/*.ts\" --config ./.prettierrc.json --write"
+    "fix": "npm run pretty:fix && npm run lint:fix",
+    "pretty:lint": "npx prettier \"src/**/*.ts\" \"test/**/*.ts\" --config ./.prettierrc.json --list-different",
+    "pretty:fix": "npx prettier \"src/**/*.ts\" \"test/**/*.ts\" --config ./.prettierrc.json --write",
+    "lint:fix": "npx tslint --fix --force -t verbose 'test/**/*.ts' 'src/**/*.ts' 'docs/**/*.ts'"
   },
   "repository": {
     "type": "git",
