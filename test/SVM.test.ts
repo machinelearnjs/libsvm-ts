@@ -1,4 +1,4 @@
-import { SVM } from '../src/SVM';
+// import { SVM } from '../src/SVM';
 /*
 describe('SVM', () => {
   let svm: SVM;
