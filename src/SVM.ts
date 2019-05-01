@@ -34,10 +34,14 @@ export class SVM {
   /**
    * Loads the WASM libsvm asynchronously, this is best for browser usage
    */
-  load(): Promise<unknown> {
+  load(): Promise<SVM> {
     return libsvm
       .load()
       .then(() => {
+        if (this.loaded) {
+          throw new SVMError('Cannot load an already loaded SVM');
+        }
+
         this.predict_one = libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);
         this.predict_one_probability = libsvm.cwrap('libsvm_predict_one_probability', 'number', [
           'number',
@@ -63,6 +67,8 @@ export class SVM {
         this.free_problem = libsvm.cwrap('free_problem', null, ['number']);
         this.serialize_model = libsvm.cwrap('serialize_model', 'number', ['number']);
         this.deserialize_model = libsvm.cwrap('deserialize_model', 'number', ['string']);
+        this.loaded = true;
+        return this;
       })
       .catch((err) => {
         throw new WASMError(err);
@@ -77,11 +83,62 @@ export class SVM {
     if (this.deserialized) {
       throw new SVMError('Cannot train a deserialized model');
     }
-    console.log('passed the desereialse');
     this.problem = this.createProblem(args);
-    console.log('created a problem');
     const command = this.getCommand(args.samples);
     this.model = this.train_problem(this.problem, command);
+    console.log('checking model', this.model);
+  }
+
+  /**
+   * Predict using a single vector of sample
+   * @param args
+   */
+  predictOne(args: { sample; }) {
+    const { sample } = args;
+
+    if (!this.model) {
+      throw new SVMError('SVM cannot perform predictOne unless you instantiate it');
+    }
+
+    return this.predict_one(this.model, new Uint8Array(new Float64Array(sample).buffer), sample.length);
+  }
+
+  /**
+   * Predict a matrix
+   * @param args
+   */
+  predict(args: { samples; }) {
+    const { samples } = args;
+
+    let arr = [];
+    for (let i = 0; i < samples.length; i++) {
+      arr.push(this.predictOne(samples[i]));
+    }
+    return arr;
+  }
+
+  /**
+   * Performs k-fold cross-validation (KF-CV). KF-CV separates the data-set into kFold random equally sized partitions,
+   * and uses each as a validation set, with all other partitions used in the training set. Observations left over
+   * from if kFold does not divide the number of observations are left out of the cross-validation process. If
+   * kFold is one, this is equivalent to a leave-on-out cross-validation
+   * @param args
+   */
+  crossValidation(args: { samples, labels, kFold }) {
+    const { samples, labels, kFold } = args;
+
+    if (this.deserialized) {
+      throw new SVMError('Cannot cross validate on an instance created with SVM.load');
+    }
+
+    const problem = this.createProblem({ samples, labels });
+    const target = libsvm._malloc(labels.length * 8);
+    this.svm_cross_validation(problem, this.getCommand(samples), kFold, target);
+    const data = libsvm.HEAPF64.subarray(target / 8, target / 8 + labels.length);
+    const arr = Array.from(data);
+    libsvm._free(target);
+    this.free_problem(problem);
+    return arr;
   }
 
   private getCommand(samples) {
@@ -96,9 +153,8 @@ export class SVM {
     const { samples, labels } = args;
     const nbSamples = samples.length;
     const nbFeatures = labels.length;
-    console.log('checking before create svm node');
     const problem = this.create_svm_nodes(nbSamples, nbFeatures);
-    console.log('created a svm node');
+    console.log('created a svm node', problem);
     for (let i = 0; i < nbSamples; i++) {
       this.add_instance(problem, new Uint8Array(new Float64Array(samples[i]).buffer), nbFeatures, labels[i], i);
     }

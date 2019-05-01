@@ -19,7 +19,7 @@ export interface CommandArguments {
   type?: SVMTypes;
   kernel?: KernelTypes;
   degree?: number;
-  gamma?: string;
+  gamma?: number;
   coef0?: number;
   cost?: number;
   nu?: number;

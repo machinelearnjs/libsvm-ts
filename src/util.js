@@ -1,6 +1,5 @@
 "use strict";
 exports.__esModule = true;
-var Errors_1 = require("./Errors");
 var mapOptionToCommand = {
     quiet: 'q',
     type: 's',
@@ -59,7 +58,7 @@ function getCommand(options) {
             continue;
         }
         if (mapOptionToCommand[key] == null) {
-            throw new Errors_1.UtilError('Bad option');
+            throw new Error('Bad option');
         }
         // Adding an empty space before append a new command
         if (str) {

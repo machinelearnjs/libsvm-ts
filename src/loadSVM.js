@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (libsvm) {
-  const util = require('./Util');
+  const util = require('./util');
 
   /* eslint-disable camelcase */
   const predict_one = libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);
@@ -47,14 +47,14 @@ module.exports = function (libsvm) {
     }
 
     /**
-         * Trains the SVM model.
-         * @param {Array<Array<number>>} samples - The training samples. First level of array are the samples, second
-         * level are the individual features
-         * @param {Array<number>} labels - The training labels. It should have the same size as the samples. If you are
-         * training a classification model, the labels should be distinct integers for each class. If you are training
-         * a regression model, each label should be the value of the predicted variable.
-         * @throws if SVM instance was instantiated from SVM.load.
-         */
+     * Trains the SVM model.
+     * @param {Array<Array<number>>} samples - The training samples. First level of array are the samples, second
+     * level are the individual features
+     * @param {Array<number>} labels - The training labels. It should have the same size as the samples. If you are
+     * training a classification model, the labels should be distinct integers for each class. If you are training
+     * a regression model, each label should be the value of the predicted variable.
+     * @throws if SVM instance was instantiated from SVM.load.
+     */
     train(samples, labels) {
       if (this._deserialized) throw new Error('Train cannot be called on instance created with SVM.load');
       this.free();
@@ -63,6 +63,7 @@ module.exports = function (libsvm) {
       this.problem = createProblem(samples, labels);
       const command = this.getCommand(samples);
       this.model = train_problem(this.problem, command);
+      console.log('loadSVM checking model', this.model);
     }
 
     /**
