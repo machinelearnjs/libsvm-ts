@@ -17,7 +17,7 @@
   "scripts": {
     "benchmark": "npm run build-benchmark && node benchmark/bin",
     "build-benchmark": "(cd benchmark/iris; make)",
-    "build": "run-s build-emscripten webpack-build",
+    "build": "run-s build-ts build-emscripten webpack-build",
     "build-ts": "yarn clean && yarn build-ts:main",
     "build-ts:main": "npx tsc -p tsconfig.json",
     "build-emscripten-clean": "make clean && rm -rf out/emscripten/",
@@ -28,9 +28,6 @@
     "demo-build": "rimraf demo-dist && BABEL_ENV=production webpack -p --config webpack/webpack.production.js; cp demos/index.html demo-dist",
     "deploy": "npm run demo-build && gh-pages -d demo-dist",
     "docs": "jsdoc2md src/loadSVM.js -t .docs/Readme.hbs --no-cache > README.md",
-    "eslint": "eslint src/loadSVM.js demos examples",
-    "eslint-fix": "eslint --fix src/loadSVM.js demos examples",
-    "prepare": "git submodule init && git submodule update",
     "start": "webpack-dev-server --config webpack/webpack.config.js",
     "clean": "npx del-cli build",
     "test": "npm run build && npm run test:unit && npm run lint && npm run pretty:lint",
