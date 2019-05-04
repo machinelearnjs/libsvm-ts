@@ -6,8 +6,17 @@
 trigger:
 - master
 
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    mac:
+      imageName: 'macos-10.13'
+    windows:
+      imageName: 'vs2017-win2016'
+
 pool:
-  vmImage: 'Ubuntu-16.04'
+  vmImage: $(imageName)
 
 steps:
 - task: NodeTool@0
@@ -16,6 +25,11 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
+    git init
+    git clone https://github.com/emscripten-core/emsdk.git
+    ./emsdk/emsdk install latest
+    ./emsdk/emsdk activate latest
+    source ./emsdk/emsdk_env.sh
     npm install
-    npm run build
+    npm run test
   displayName: 'npm install and build'

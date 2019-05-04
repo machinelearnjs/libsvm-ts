@@ -3,7 +3,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: ['./asm.js'],
+  entry: ['./index.js'],
   output: {
     path: path.join(__dirname, '../dist/browser/asm'),
     filename: 'libsvm.js',

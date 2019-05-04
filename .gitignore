@@ -1,5 +1,8 @@
 node_modules
 dist
-out
 demo-dist
 benchmark/**/bin
+build
+src/**/*.js
+!src/post.js
+!src/pre.js

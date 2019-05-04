@@ -55,7 +55,7 @@ async function run(mode, time, benchmark) {
         SVM = require('../asm');
     } else if (mode === 'wasm') {
         try {
-            SVM = await require('../wasm');
+            SVM = await require('..');
         } catch (e) {
             return 'error';
         }

@@ -1,9 +1,8 @@
 'use strict';
-
 function xor(SVM) {
   let svm = new SVM({
-    kernel: SVM.KERNEL_TYPES.RBF,
-    type: SVM.SVM_TYPES.C_SVC,
+    kernel: '2',
+    type: '0',
     gamma: 1,
     cost: 1
   });
@@ -22,15 +21,17 @@ function xor(SVM) {
 
 function execAsm() {
   console.log('asm');
-  const SVM = require('../asm');
-  xor(SVM);
+  const SVM = require('..');
+  SVM.then((S) => {
+    xor(S);
+  });
 }
 
 async function execWasm() {
   console.log('wasm');
   let SVM;
   try {
-    SVM = await require('../wasm');
+    SVM = await require('..');
   } catch (e) {
     console.log(e);
   }
