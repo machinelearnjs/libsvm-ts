@@ -119,6 +119,10 @@ export class SVM {
     return arr;
   }
 
+  /**
+   * Predict the label with probability estimate of many samples.
+   * @param args
+   */
   predictProbability(args: { samples }) {
     const { samples } = args;
 
@@ -157,6 +161,37 @@ export class SVM {
     return result;
   }
 
+  /**
+   * Predict a regression value with a confidence interval
+   * @param args
+   */
+  predictOneInterval(args: { sample; confidence }) {
+    const { sample, confidence } = args;
+    const interval = this.getInterval(confidence);
+    const predicted = this.predictOne({ sample });
+    return {
+      predicted,
+      interval: [predicted - interval, predicted + interval],
+    };
+  }
+
+  /**
+   * Predict regression values with confidence intervals
+   * @param args
+   */
+  predictInterval(args: { samples; confidence }) {
+    const { samples, confidence } = args;
+    const interval = this.getInterval(confidence);
+    const predicted = this.predict({ samples });
+    return predicted.map((pred) => ({
+      predicted: pred,
+      interval: [pred - interval, pred + interval],
+    }));
+  }
+
+  /**
+   * Get the array of labels from the model. Useful when creating an SVM instance with SVM.load
+   */
   getLabels() {
     const nLabels = this.svm_get_nr_class(this.model);
     return this.getIntArrayFromModel(this.svm_get_labels, this.model, nLabels);
@@ -208,6 +243,28 @@ export class SVM {
     return arr;
   }
 
+  /**
+   * Get the indices of the support vectors from the training set passed to the train method.
+   */
+  getSVIndices() {
+    const nSV = this.svm_get_nr_sv(this.model);
+    return this.getIntArrayFromModel(this.svm_get_sv_indices, this.model, nSV);
+  }
+
+  /**
+   * Uses libsvm's serialization method of the model.
+   */
+  serializeModel() {
+    if (!this.model) {
+      throw new SVMError('Cannot serialize model. No model was trained');
+    }
+
+    const result = this.serialize_model(this.model);
+    const str = this.libsvm.Pointer_stringify(result);
+    this.libsvm._free(result);
+    return str;
+  }
+
   private getCommand(samples) {
     const options = {};
     Object.assign(options, this.options, {
@@ -234,5 +291,19 @@ export class SVM {
     const arr = Array.from(data);
     this.libsvm._free(offset);
     return arr;
+  }
+
+  private getInterval(confidence) {
+    const sigma = this.svm_get_svr_probability(this.model);
+    if (sigma === 0) {
+      throw new SVMError('the model is not a regression with probability estimates');
+    }
+
+    if (confidence <= 0 || confidence >= 1) {
+      throw new SVMError('confidence must be greater than 0 and less than 1');
+    }
+
+    const p = (1 - confidence) / 2;
+    return sigma * Math.sign(p - 0.5) * Math.log2(1 - 2 * Math.abs(p - 0.5));
   }
 }
