@@ -21,7 +21,7 @@ function xor(SVM) {
 
 function execAsm() {
   console.log('asm');
-  const SVM = require('../wasm');
+  const SVM = require('..');
   SVM.then((S) => {
     xor(S);
   });
@@ -31,7 +31,7 @@ async function execWasm() {
   console.log('wasm');
   let SVM;
   try {
-    SVM = await require('../wasm');
+    SVM = await require('..');
   } catch (e) {
     console.log(e);
   }

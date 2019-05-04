@@ -4,3 +4,4 @@ out
 demo-dist
 benchmark/**/bin
 build
+src/**/*.js

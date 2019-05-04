@@ -2,13 +2,13 @@
   "name": "libsvm-ts",
   "version": "0.0.0",
   "description": "A port of libsvm to Typescript using emscripten",
-  "main": "wasm.js",
+  "main": "index.js",
   "files": [
     "src",
     "out",
+    "build",
     "dist",
-    "asm.js",
-    "wasm.js",
+    "index.js",
     "LICENSE"
   ],
   "engines": {

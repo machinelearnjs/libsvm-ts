@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SVM = require('../wasm');
+const SVM = require('..');
 
 SVM.then((S) => {
   const svm = new S({

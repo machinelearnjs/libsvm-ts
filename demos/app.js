@@ -4,7 +4,7 @@ import '../out/asm/libsvm.js';
 
 async function load() {
   try {
-    global.SVM = await import('../wasm');
+    global.SVM = await import('..');
   } catch (e) {
     console.warn('wasm failed, trying asm'); // eslint-disable-line no-console
     global.SVM = await import('../asm');

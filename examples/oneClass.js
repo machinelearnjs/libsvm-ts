@@ -23,7 +23,7 @@ async function execWasm() {
   console.log('wasm');
   let SVM;
   try {
-    SVM = await require('../wasm');
+    SVM = await require('..');
   } catch (e) {
     console.log(e);
   }
