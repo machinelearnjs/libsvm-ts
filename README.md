@@ -31,10 +31,10 @@ yarn add libsvm-ts
 
 ## Load in nodejs
 The main entry point loads the WebAssembly build and is asynchronous.
-```js
-require('libsvm-js').then(SVM => {
-    const svm = new SVM(); // ...
-});
+
+```typescript
+import { SVM } from 'libsvm-ts';
+const svm = new SVM(); // ...
 ```
 
 There is an alternative entry point if you want to use asm build. This entrypoint is synchronous.
@@ -48,30 +48,27 @@ The npm package contains a bundle for the browser that works with AMD and browse
 
 ## Basic usage
 This example illustrates how to use the library to train and use an SVM classifier.
-```js
+```typescript
+import { SVM } from 'libsvm-ts';
 
-async function xor() {
-    const SVM = await
-    require('libsvm-js');
-    const svm = new SVM({
-        kernel: SVM.KERNEL_TYPES.RBF, // The type of kernel I want to use
-        type: SVM.SVM_TYPES.C_SVC,    // The type of SVM I want to run
-        gamma: 1,                     // RBF kernel gamma parameter
-        cost: 1                       // C_SVC cost parameter
-    });
+const svm = new SVM({
+  type: 'C_SVC',
+  kernel: 'RBF',
+  gamma: 1,
+  cost: 1
+});
 
-    // This is the xor problem
-    //
-    //  1  0
-    //  0  1
-    const features = [[0, 0], [1, 1], [1, 0], [0, 1]];
-    const labels = [0, 0, 1, 1];
-    svm.train(features, labels);  // train the model
-    const predictedLabel = svm.predictOne([0.7, 0.8]);
-    console.log(predictedLabel) // 0
-}
+// This is the xor problem
+//  1  0
+//  0  1
+const samples = [[0, 0], [1, 1], [1, 0], [0, 1]];
+const labels = [0, 0, 1, 1];
 
-xor().then(() => console.log('done!'));
+svm.load().then((loadedSVM) => {
+  loadedSVM.train({ samples, labels });
+  const predictedLabel = loadedSVM.predictOne([0.7, 0.8]);
+  console.log(predictedLabel) // 0
+});
 ```
 
 # Benchmarks

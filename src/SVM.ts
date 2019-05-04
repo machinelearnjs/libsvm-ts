@@ -1,4 +1,5 @@
-import libsvm from '../out/wasm/libsvm';
+import asm from '../out/asm/libsvm';
+import wasm from '../out/wasm/libsvm';
 import { SVMError, WASMError } from './Errors';
 import { CommandArguments } from './types/Commands';
 import { getCommand } from './Util';
@@ -24,49 +25,51 @@ export class SVM {
   private deserialized: boolean;
   private problem;
   private loaded: boolean; // A flag to ensure the wasm is loaded
+  private libsvm; // Initially it is using asm. Calling .load() will load wasm
 
   constructor(options: CommandArguments) {
     this.options = options;
     this.model = null;
     this.loaded = false;
+    this.libsvm = asm;
   }
 
   /**
    * Loads the WASM libsvm asynchronously, this is best for browser usage
    */
   load(): Promise<SVM> {
-    return libsvm
+    return wasm
       .load()
       .then(() => {
         if (this.loaded) {
           throw new SVMError('Cannot load an already loaded SVM');
         }
-
-        this.predict_one = libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);
-        this.predict_one_probability = libsvm.cwrap('libsvm_predict_one_probability', 'number', [
+        this.libsvm = wasm;
+        this.predict_one = this.libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);
+        this.predict_one_probability = this.libsvm.cwrap('libsvm_predict_one_probability', 'number', [
           'number',
           'array',
           'number',
           'number',
         ]);
-        this.add_instance = libsvm.cwrap('add_instance', null, ['number', 'array', 'number', 'number', 'number']);
-        this.create_svm_nodes = libsvm.cwrap('create_svm_nodes', 'number', ['number', 'number']);
-        this.train_problem = libsvm.cwrap('libsvm_train_problem', 'number', ['number', 'string']);
-        this.svm_get_nr_sv = libsvm.cwrap('svm_get_nr_sv', 'number', ['number']);
-        this.svm_get_nr_class = libsvm.cwrap('svm_get_nr_class', 'number', ['number']);
-        this.svm_get_sv_indices = libsvm.cwrap('svm_get_sv_indices', null, ['number', 'number']);
-        this.svm_get_labels = libsvm.cwrap('svm_get_labels', null, ['number', 'number']);
-        this.svm_free_model = libsvm.cwrap('svm_free_model', null, ['number']);
-        this.svm_cross_validation = libsvm.cwrap('libsvm_cross_validation', null, [
+        this.add_instance = this.libsvm.cwrap('add_instance', null, ['number', 'array', 'number', 'number', 'number']);
+        this.create_svm_nodes = this.libsvm.cwrap('create_svm_nodes', 'number', ['number', 'number']);
+        this.train_problem = this.libsvm.cwrap('libsvm_train_problem', 'number', ['number', 'string']);
+        this.svm_get_nr_sv = this.libsvm.cwrap('svm_get_nr_sv', 'number', ['number']);
+        this.svm_get_nr_class = this.libsvm.cwrap('svm_get_nr_class', 'number', ['number']);
+        this.svm_get_sv_indices = this.libsvm.cwrap('svm_get_sv_indices', null, ['number', 'number']);
+        this.svm_get_labels = this.libsvm.cwrap('svm_get_labels', null, ['number', 'number']);
+        this.svm_free_model = this.libsvm.cwrap('svm_free_model', null, ['number']);
+        this.svm_cross_validation = this.libsvm.cwrap('libsvm_cross_validation', null, [
           'number',
           'string',
           'number',
           'number',
         ]);
-        this.svm_get_svr_probability = libsvm.cwrap('svm_get_svr_probability', null, ['number']);
-        this.free_problem = libsvm.cwrap('free_problem', null, ['number']);
-        this.serialize_model = libsvm.cwrap('serialize_model', 'number', ['number']);
-        this.deserialize_model = libsvm.cwrap('deserialize_model', 'number', ['string']);
+        this.svm_get_svr_probability = this.libsvm.cwrap('svm_get_svr_probability', null, ['number']);
+        this.free_problem = this.libsvm.cwrap('free_problem', null, ['number']);
+        this.serialize_model = this.libsvm.cwrap('serialize_model', 'number', ['number']);
+        this.deserialize_model = this.libsvm.cwrap('deserialize_model', 'number', ['string']);
         this.loaded = true;
         return this;
       })
@@ -152,11 +155,11 @@ export class SVM {
     }
 
     const problem = this.createProblem({ samples, labels });
-    const target = libsvm._malloc(labels.length * 8);
+    const target = this.libsvm._malloc(labels.length * 8);
     this.svm_cross_validation(problem, this.getCommand(samples), kFold, target);
-    const data = libsvm.HEAPF64.subarray(target / 8, target / 8 + labels.length);
+    const data = this.libsvm.HEAPF64.subarray(target / 8, target / 8 + labels.length);
     const arr = Array.from(data);
-    libsvm._free(target);
+    this.libsvm._free(target);
     this.free_problem(problem);
     return arr;
   }
