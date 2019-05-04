@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/jasonShin91/machinelearn.js/_apis/build/status/machinelearnjs.libsvm-ts?branchName=master)](https://dev.azure.com/jasonShin91/machinelearn.js/_build/latest?definitionId=2&branchName=master)
 [![NPM version][npm-image]][npm-url]
 [![npm download][download-image]][download-url]
 
@@ -342,6 +343,6 @@ Create a SVM instance from the serialized model.
 BSD-3-Clause
 
 [npm-image]: https://img.shields.io/npm/v/libsvm-js.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/libsvm-js
+[npm-url]: https://www.npmjs.com/package/libsvm-ts
 [download-image]: https://img.shields.io/npm/dm/libsvm-js.svg?style=flat-square
-[download-url]: https://npmjs.org/package/libsvm-js
+[download-url]: https://www.npmjs.com/package/libsvm-ts
