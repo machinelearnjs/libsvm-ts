@@ -1,6 +1,5 @@
 node_modules
 dist
-out
 demo-dist
 benchmark/**/bin
 build
