@@ -86,14 +86,13 @@ export class SVM {
     this.problem = this.createProblem(args);
     const command = this.getCommand(args.samples);
     this.model = this.train_problem(this.problem, command);
-    console.log('checking model', this.model);
   }
 
   /**
    * Predict using a single vector of sample
    * @param args
    */
-  predictOne(args: { sample; }) {
+  predictOne(args: { sample }) {
     const { sample } = args;
 
     if (!this.model) {
@@ -107,14 +106,35 @@ export class SVM {
    * Predict a matrix
    * @param args
    */
-  predict(args: { samples; }) {
+  predict(args: { samples }) {
     const { samples } = args;
 
-    let arr = [];
+    const arr = [];
     for (let i = 0; i < samples.length; i++) {
       arr.push(this.predictOne(samples[i]));
     }
     return arr;
+  }
+
+  predictProbability(args: { samples }) {
+    const { samples } = args;
+
+    const arr = [];
+  }
+
+  toJSON() {
+    return {
+      model: this.model,
+      options: this.options,
+      loaded: this.loaded,
+    };
+  }
+
+  fromJSON(args: { model; options; loaded }) {
+    const { model, options, loaded } = args;
+    this.model = model;
+    this.options = options;
+    this.loaded = loaded;
   }
 
   /**
@@ -124,7 +144,7 @@ export class SVM {
    * kFold is one, this is equivalent to a leave-on-out cross-validation
    * @param args
    */
-  crossValidation(args: { samples, labels, kFold }) {
+  crossValidation(args: { samples; labels; kFold }) {
     const { samples, labels, kFold } = args;
 
     if (this.deserialized) {
@@ -154,7 +174,6 @@ export class SVM {
     const nbSamples = samples.length;
     const nbFeatures = labels.length;
     const problem = this.create_svm_nodes(nbSamples, nbFeatures);
-    console.log('created a svm node', problem);
     for (let i = 0; i < nbSamples; i++) {
       this.add_instance(problem, new Uint8Array(new Float64Array(samples[i]).buffer), nbFeatures, labels[i], i);
     }

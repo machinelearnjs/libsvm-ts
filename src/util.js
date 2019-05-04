@@ -87,7 +87,6 @@ function getCommand(options) {
                 break;
             }
             case 'kernel':
-                console.log('kernel', mapOptionToCommand[key], '  ', options[key], '  ', mapKernelTypesToValue[options[key]]);
                 str += "-" + mapOptionToCommand[key] + " " + mapKernelTypesToValue[options[key]];
                 break;
             case 'type':

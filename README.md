@@ -27,6 +27,8 @@ npm install libsvm-ts
 yarn add libsvm-ts
 ```
 
+## Install and enable Emscripten
+
 ## Load in nodejs
 The main entry point loads the WebAssembly build and is asynchronous.
 ```js
