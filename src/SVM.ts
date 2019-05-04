@@ -123,8 +123,48 @@ export class SVM {
     const { samples } = args;
 
     const arr = [];
+
+    for (let i = 0; i < samples.length; i++) {
+      arr.push(this.predictOneProbability(samples[i]));
+    }
+    return arr;
   }
 
+  /**
+   * Predict the label with probability estimate.
+   * @param args
+   */
+  predictOneProbability(args: { sample }) {
+    const { sample } = args;
+    const labels = this.getLabels();
+    const nbLabels = labels.length;
+    const estimates = this.libsvm._malloc(nbLabels * 8);
+    const prediction = this.predict_one_probability(
+      this.model,
+      new Uint8Array(new Float64Array(sample).buffer),
+      sample.length,
+      estimates,
+    );
+    const estimatesArr = Array.from(this.libsvm.HEAPF64.subarray(estimates / 8, estimates / 8 + nbLabels));
+    const result = {
+      prediction,
+      estimates: labels.map((label, idx) => ({
+        label,
+        probability: estimatesArr[idx],
+      })),
+    };
+    this.libsvm._free(estimates);
+    return result;
+  }
+
+  getLabels() {
+    const nLabels = this.svm_get_nr_class(this.model);
+    return this.getIntArrayFromModel(this.svm_get_labels, this.model, nLabels);
+  }
+
+  /**
+   * Save the state of the SVM
+   */
   toJSON() {
     return {
       model: this.model,
@@ -133,6 +173,10 @@ export class SVM {
     };
   }
 
+  /**
+   * Load a model from a state
+   * @param args
+   */
   fromJSON(args: { model; options; loaded }) {
     const { model, options, loaded } = args;
     this.model = model;
@@ -181,5 +225,14 @@ export class SVM {
       this.add_instance(problem, new Uint8Array(new Float64Array(samples[i]).buffer), nbFeatures, labels[i], i);
     }
     return problem;
+  }
+
+  private getIntArrayFromModel(fn, model, size) {
+    const offset = this.libsvm._malloc(size * 4);
+    fn(model, offset);
+    const data = this.libsvm.HEAP32.subarray(offset / 4, offset / 4 + size);
+    const arr = Array.from(data);
+    this.libsvm._free(offset);
+    return arr;
   }
 }
