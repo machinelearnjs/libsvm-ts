@@ -1,6 +1,4 @@
 'use strict';
+const SVM = require('./build/SVM');
 
-const loadSVM = require('./src/loadSVM');
-const libsvm = require('./out/wasm/libsvm');
-
-module.exports = libsvm.load().then(() => loadSVM(libsvm));
+module.exports = SVM;
