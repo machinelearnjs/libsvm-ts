@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://i.imgur.com/q94s59T.png" />
+    <img src="https://i.imgur.com/eNePt87.png" />
 </p>
 
 [![Build Status](https://dev.azure.com/jasonShin91/machinelearn.js/_apis/build/status/machinelearnjs.libsvm-ts?branchName=master)](https://dev.azure.com/jasonShin91/machinelearn.js/_build/latest?definitionId=2&branchName=master)
