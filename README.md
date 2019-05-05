@@ -1,3 +1,7 @@
+<div style="text-align: center;">
+    <img src="https://i.imgur.com/q94s59T.png" />
+</div>
+
 [![Build Status](https://dev.azure.com/jasonShin91/machinelearn.js/_apis/build/status/machinelearnjs.libsvm-ts?branchName=master)](https://dev.azure.com/jasonShin91/machinelearn.js/_build/latest?definitionId=2&branchName=master)
 [![NPM version][npm-image]][npm-url]
 [![npm download][download-image]][download-url]
