@@ -72,6 +72,17 @@ svm.load().then((loadedSVM) => {
 });
 ```
 
+# Development 
+
+We welcome new contributors of all level of experience. The development guide will be added to assist new contributors to easily join the project.
+
+- You want to participate in a Machine Learning project, which will boost your Machine Learning skills and knowledge
+- Looking to be part of a growing community
+- You want to learn Machine Learning
+- You like Typescript ❤️ Machine Learning
+
+Checkout `CONTRIBUTIONS.md` for more information
+
 # Benchmarks
 You can compare the performance of the library in various environments. Run `npm run benchmark` to run the benchmarks with native c/c++ code and with the compiled code with your local version of node.js. For browser performance, go to the [web benchmark page](https://mljs.github.io/libsvm/#benchmarks).
 
