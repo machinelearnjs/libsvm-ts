@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="https://i.imgur.com/q94s59T.png" />
+</p>
+
 [![Build Status](https://dev.azure.com/jasonShin91/machinelearn.js/_apis/build/status/machinelearnjs.libsvm-ts?branchName=master)](https://dev.azure.com/jasonShin91/machinelearn.js/_build/latest?definitionId=2&branchName=master)
 [![NPM version][npm-image]][npm-url]
 [![npm download][download-image]][download-url]
@@ -27,8 +31,6 @@ npm install libsvm-ts
 ```bash
 yarn add libsvm-ts
 ```
-
-## Install and enable Emscripten
 
 ## Load in nodejs
 The main entry point loads the WebAssembly build and is asynchronous.
@@ -71,6 +73,17 @@ svm.load().then((loadedSVM) => {
   console.log(predictedLabel) // 0
 });
 ```
+
+# Development 
+
+We welcome new contributors of all level of experience. The development guide will be added to assist new contributors to easily join the project.
+
+- You want to participate in a Machine Learning project, which will boost your Machine Learning skills and knowledge
+- Looking to be part of a growing community
+- You want to learn Machine Learning
+- You like Typescript ❤️ Machine Learning
+
+Checkout `CONTRIBUTIONS.md` for more information
 
 # Benchmarks
 You can compare the performance of the library in various environments. Run `npm run benchmark` to run the benchmarks with native c/c++ code and with the compiled code with your local version of node.js. For browser performance, go to the [web benchmark page](https://mljs.github.io/libsvm/#benchmarks).
