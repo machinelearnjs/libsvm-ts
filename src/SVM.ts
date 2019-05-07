@@ -31,13 +31,29 @@ export class SVM {
     this.options = options;
     this.model = null;
     this.loaded = false;
-    this.libsvm = asm;
+  }
+
+  loadASM(): Promise<SVM> {
+    return asm
+      .load()
+      .then(() => {
+        if (this.loaded) {
+          throw new SVMError('Cannot load an already loaded SVM');
+        }
+        this.libsvm = asm;
+        this.initiateAPIs(this.libsvm);
+        this.loaded = true;
+        return this;
+      })
+      .catch((err) => {
+        throw new WASMError(err);
+      });
   }
 
   /**
    * Loads the WASM libsvm asynchronously, this is best for browser usage
    */
-  load(): Promise<SVM> {
+  loadWASM(): Promise<SVM> {
     return wasm
       .load()
       .then(() => {
@@ -45,31 +61,7 @@ export class SVM {
           throw new SVMError('Cannot load an already loaded SVM');
         }
         this.libsvm = wasm;
-        this.predict_one = this.libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);
-        this.predict_one_probability = this.libsvm.cwrap('libsvm_predict_one_probability', 'number', [
-          'number',
-          'array',
-          'number',
-          'number',
-        ]);
-        this.add_instance = this.libsvm.cwrap('add_instance', null, ['number', 'array', 'number', 'number', 'number']);
-        this.create_svm_nodes = this.libsvm.cwrap('create_svm_nodes', 'number', ['number', 'number']);
-        this.train_problem = this.libsvm.cwrap('libsvm_train_problem', 'number', ['number', 'string']);
-        this.svm_get_nr_sv = this.libsvm.cwrap('svm_get_nr_sv', 'number', ['number']);
-        this.svm_get_nr_class = this.libsvm.cwrap('svm_get_nr_class', 'number', ['number']);
-        this.svm_get_sv_indices = this.libsvm.cwrap('svm_get_sv_indices', null, ['number', 'number']);
-        this.svm_get_labels = this.libsvm.cwrap('svm_get_labels', null, ['number', 'number']);
-        this.svm_free_model = this.libsvm.cwrap('svm_free_model', null, ['number']);
-        this.svm_cross_validation = this.libsvm.cwrap('libsvm_cross_validation', null, [
-          'number',
-          'string',
-          'number',
-          'number',
-        ]);
-        this.svm_get_svr_probability = this.libsvm.cwrap('svm_get_svr_probability', null, ['number']);
-        this.free_problem = this.libsvm.cwrap('free_problem', null, ['number']);
-        this.serialize_model = this.libsvm.cwrap('serialize_model', 'number', ['number']);
-        this.deserialize_model = this.libsvm.cwrap('deserialize_model', 'number', ['string']);
+        this.initiateAPIs(this.libsvm);
         this.loaded = true;
         return this;
       })
@@ -86,6 +78,7 @@ export class SVM {
     if (this.deserialized) {
       throw new SVMError('Cannot train a deserialized model');
     }
+    this.free();
     this.problem = this.createProblem(args);
     const command = this.getCommand(args.samples);
     this.model = this.train_problem(this.problem, command);
@@ -263,6 +256,48 @@ export class SVM {
     const str = this.libsvm.Pointer_stringify(result);
     this.libsvm._free(result);
     return str;
+  }
+
+  /**
+   * Free the memory allocated for the model. Since this memory is stored in the memory model of emscripten, it is
+   * allocated within an ArrayBuffer and WILL NOT BE GARBARGE COLLECTED, you have to explicitly free it. So
+   * not calling this will result in memory leaks. As of today in the browser, there is no way to hook the
+   * garbage collection of the SVM object to free it automatically.
+   * Free the memory that was created by the compiled libsvm library to.
+   * store the model. This model is reused every time the predict method is called.
+   */
+  private free() {
+    if (this.problem) {
+      this.free_problem(this.problem);
+      this.problem = null;
+    }
+    if (this.model !== null) {
+      this.svm_free_model(this.model);
+      this.model = null;
+    }
+  }
+
+  private initiateAPIs(libsvm) {
+    this.predict_one = libsvm.cwrap('libsvm_predict_one', 'number', ['number', 'array', 'number']);
+    this.predict_one_probability = libsvm.cwrap('libsvm_predict_one_probability', 'number', [
+      'number',
+      'array',
+      'number',
+      'number',
+    ]);
+    this.add_instance = libsvm.cwrap('add_instance', null, ['number', 'array', 'number', 'number', 'number']);
+    this.create_svm_nodes = libsvm.cwrap('create_svm_nodes', 'number', ['number', 'number']);
+    this.train_problem = libsvm.cwrap('libsvm_train_problem', 'number', ['number', 'string']);
+    this.svm_get_nr_sv = libsvm.cwrap('svm_get_nr_sv', 'number', ['number']);
+    this.svm_get_nr_class = libsvm.cwrap('svm_get_nr_class', 'number', ['number']);
+    this.svm_get_sv_indices = libsvm.cwrap('svm_get_sv_indices', null, ['number', 'number']);
+    this.svm_get_labels = libsvm.cwrap('svm_get_labels', null, ['number', 'number']);
+    this.svm_free_model = libsvm.cwrap('svm_free_model', null, ['number']);
+    this.svm_cross_validation = libsvm.cwrap('libsvm_cross_validation', null, ['number', 'string', 'number', 'number']);
+    this.svm_get_svr_probability = libsvm.cwrap('svm_get_svr_probability', null, ['number']);
+    this.free_problem = libsvm.cwrap('free_problem', null, ['number']);
+    this.serialize_model = libsvm.cwrap('serialize_model', 'number', ['number']);
+    this.deserialize_model = libsvm.cwrap('deserialize_model', 'number', ['string']);
   }
 
   private getCommand(samples) {
