@@ -67,7 +67,8 @@ const svm = new SVM({
 const samples = [[0, 0], [1, 1], [1, 0], [0, 1]];
 const labels = [0, 0, 1, 1];
 
-svm.load().then((loadedSVM) => {
+svm.loadWASM().then((loadedSVM) => {
+  // Also you can loadASM() instead of loadWASM()
   loadedSVM.train({ samples, labels });
   const predictedLabel = loadedSVM.predictOne([0.7, 0.8]);
   console.log(predictedLabel) // 0
@@ -193,7 +194,7 @@ kFold is one, this is equivalent to a leave-on-out cross-validation
 the number of samples provided as input.  
 **Throws**:
 
-- if SVM instance was instantiated from SVM.load.
+- if SVM instance was instantiated from SVM.loadWASM() or SVM.loadASK().
 
 
 | Param | Type | Description |
@@ -339,18 +340,27 @@ SVM kernel types
 | RBF | Radial basis function (gaussian) kernel |
 | SIGMOID | Sigmoid kernel |
 
-<a name="SVM.load"></a>
+<a name="SVM.loadASM"></a>
 
-### SVM.load(serializedModel) ⇒ [<code>SVM</code>](#SVM)
-Create a SVM instance from the serialized model.
+### SVM.loadASM() ⇒ [<code>SVM</code>](#SVM)
+Create a SVM instance using ASM.
 
-**Kind**: static method of [<code>SVM</code>](#SVM)  
+**Kind**: a member method of [<code>SVM</code>](#SVM)  
 **Returns**: [<code>SVM</code>](#SVM) - - SVM instance that contains the model.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | serializedModel | <code>string</code> | The serialized model. |
 
+### SVM.loadWASM() ⇒ [<code>SVM</code>](#SVM)
+Create a SVM instance using WASM.
+
+**Kind**: a member method of [<code>SVM</code>](#SVM)  
+**Returns**: [<code>SVM</code>](#SVM) - - SVM instance that contains the model.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| serializedModel | <code>string</code> | The serialized model. |
 
 # LICENSE
 BSD-3-Clause
