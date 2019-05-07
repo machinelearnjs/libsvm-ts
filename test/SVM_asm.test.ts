@@ -37,4 +37,43 @@ describe('SVM:asm', () => {
       }
     });
   });
+
+  test('should train using ONE_CLASS and RBF kernel on random values', () => {
+    const svm = new SVM({
+      kernel: KernelTypes.RBF,
+      type: SVMTypes.ONE_CLASS,
+      gamma: 1,
+      cost: 1,
+      nu: 0.1,
+      quiet: true,
+    });
+
+    const features = [[0, 0], [1, 1], [1, 0], [0, 1]];
+    const toPredict = [[0.5, 0.5], [1.5, 1]];
+    const expected = [1, -1];
+    const labels = [0, 0, 0, 0];
+
+    const expectedModel = {
+      model: null,
+      options: {
+        kernel: 'RBF',
+        type: 'ONE_CLASS',
+        gamma: 1,
+        cost: 1,
+        nu: 0.1,
+        quiet: true,
+      },
+      loaded: false,
+    };
+
+    expect(svm.toJSON()).toMatchObject(expectedModel);
+
+    svm.loadASM().then((loadedSVM) => {
+      loadedSVM.train({ samples: features, labels });
+      for (let i = 0; i < toPredict.length; i++) {
+        const pred = loadedSVM.predictOne({ sample: toPredict[i] });
+        expect(pred).toBe(expected[i]);
+      }
+    });
+  });
 });
