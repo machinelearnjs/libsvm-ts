@@ -2,7 +2,7 @@ import { SVM } from '../src/SVM';
 import { KernelTypes, SVMTypes } from '../src/types/Commands';
 
 describe('SVM:wasm', () => {
-  test('should train using XOR data and predict using RBF kernel and C_SVC', () => {
+  it('should train using XOR data and predict using RBF kernel and C_SVC', () => {
     const svm = new SVM({
       type: SVMTypes.C_SVC,
       kernel: KernelTypes.RBF,
@@ -38,7 +38,7 @@ describe('SVM:wasm', () => {
     });
   });
 
-  test('should train using ONE_CLASS and RBF kernel on random values', () => {
+  it('should train using ONE_CLASS and RBF kernel on random values', () => {
     const svm = new SVM({
       kernel: KernelTypes.RBF,
       type: SVMTypes.ONE_CLASS,
