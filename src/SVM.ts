@@ -3,7 +3,7 @@ import asm from '../out/asm/libsvm';
 // @ts-ignore: Emscripten starting point for WASM
 import wasm from '../out/wasm/libsvm';
 import { SVMError, WASMError } from './Errors';
-import { Arguments } from './types/Commands';
+import { Arguments, KernelTypes, SVMTypes } from './types/Commands';
 import { getCommand } from './Util';
 
 interface ProbabilityResult {
@@ -39,6 +39,14 @@ export class SVM {
   private libsvm; // Initially it is using asm. Calling .load() will load wasm
 
   constructor(options: Arguments) {
+    if (SVMTypes.indexOf(options.type) === -1) {
+      throw SVMError(`SVM cannot instantiate with an unknown type ${options.type}`);
+    }
+
+    if (KernelTypes.indexOf(options.kernel) === -1) {
+      throw SVMError(`SVM cannot instantiate with an unknown kernel ${options.kernel}`);
+    }
+
     this.options = options;
     this.model = null;
     this.loaded = false;

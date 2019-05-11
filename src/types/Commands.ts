@@ -1,23 +1,11 @@
-export enum SVMTypes {
-  C_SVC = 'C_SVC', // C support vector classification
-  NU_SVC = 'NU_SVC', // NU support vector classification
-  ONE_CLASS = 'ONE_CLASS', // ONE CLASS classification
-  EPSILON_SVR = 'EPSILON_SVR', // Epsilon support vector regression
-  NU_SVR = 'NU_SVR', // Nu support vector regression
-}
+export const SVMTypes = ['C_SVC', 'NU_SVC', 'ONE_CLASS', 'EPSILON_SVR', 'NU_SVR'];
 
-export enum KernelTypes {
-  LINEAR = 'LINEAR',
-  POLYNOMIAL = 'POLYNOMIAL',
-  RBF = 'RBF', // Radial basis function
-  SIGMOID = 'SIGMOID',
-  PRECOMPUTED = 'PRECOMPUTED',
-}
+export const KernelTypes = ['LINEAR', 'POLYNOMIAL', 'RBF', 'SIGMOID', 'PRECOMPUTED'];
 
 export interface Arguments {
   quiet?: boolean;
-  type?: SVMTypes;
-  kernel?: KernelTypes;
+  type?: string;
+  kernel?: string;
   degree?: number;
   gamma?: number;
   coef0?: number;

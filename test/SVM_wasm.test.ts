@@ -1,14 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { SVM } from '../src/SVM';
-import { KernelTypes, SVMTypes } from '../src/types/Commands';
 
 describe('SVM:wasm', () => {
   describe('.predictOne(...)', () => {
     it('should train using XOR data and predict using RBF kernel and C_SVC', () => {
       const svm = new SVM({
-        type: SVMTypes.C_SVC,
-        kernel: KernelTypes.RBF,
+        type: 'C_SVC',
+        kernel: 'RBF',
         gamma: 1,
         cost: 1,
         quiet: true,
@@ -47,8 +46,8 @@ describe('SVM:wasm', () => {
 
     it('should train using ONE_CLASS and RBF kernel on random values', () => {
       const svm = new SVM({
-        kernel: KernelTypes.RBF,
-        type: SVMTypes.ONE_CLASS,
+        kernel: 'RBF',
+        type: 'ONE_CLASS',
         gamma: 1,
         cost: 1,
         nu: 0.1,
@@ -97,8 +96,8 @@ describe('SVM:wasm', () => {
       const features = data.map((line) => line.map((el) => +el.split(':')[1]));
 
       const svm = new SVM({
-        type: SVMTypes.C_SVC,
-        kernel: KernelTypes.LINEAR,
+        type: 'C_SVC',
+        kernel: 'LINEAR',
         epsilon: 0.001,
         quiet: true,
         probabilityEstimates: true,

@@ -14,11 +14,11 @@ describe('util', () => {
     });
 
     it('should get type', () => {
-      expect(getCommand({ type: SVMTypes.C_SVC })).toBe('-s 0');
+      expect(getCommand({ type: 'C_SVC' })).toBe('-s 0');
     });
 
     it('should get kernel', () => {
-      expect(getCommand({ kernel: KernelTypes.LINEAR })).toBe('-t 0');
+      expect(getCommand({ kernel: 'LINEAR' })).toBe('-t 0');
     });
 
     it('should get degree', () => {
