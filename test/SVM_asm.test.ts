@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { SVM } from '../src/SVM';
 import { KernelTypes, SVMTypes } from '../src/types/Commands';
 
@@ -80,6 +82,24 @@ describe('SVM:asm', () => {
   });
 
   describe('.predict(...)', () => {
-    it('should');
+    it.only('should predict bodyfat scake dataset using C_SVC and LINEAR', () => {
+      const rawData = fs.readFileSync(path.join(__dirname, '../samples/bodyfat_scale.txt'), 'utf-8');
+      const data = rawData.split('\n').map((line) => line.split(' ').filter((el) => el));
+      const labels = data.map((line) => +line.splice(0, 1)[0]);
+      const features = data.map((line) => line.map((el) => +el.split(':')[1]));
+
+      const svm = new SVM({
+        type: SVMTypes.C_SVC,
+        kernel: KernelTypes.LINEAR,
+        epsilon: 0.001,
+        quiet: true,
+        probabilityEstimates: true,
+      });
+
+      svm.loadASM().then((loadedSVM) => {
+        loadedSVM.train({ samples: features, labels });
+        loadedSVM.predict({ samples: [[1, 2], [3, 4]] });
+      });
+    });
   });
 });
