@@ -220,6 +220,7 @@ export class SVM {
       model: this.model,
       options: this.options,
       loaded: this.loaded,
+      problem: this.problem,
     };
   }
 
@@ -227,11 +228,12 @@ export class SVM {
    * Load a model from a state
    * @param args
    */
-  fromJSON(args: { model: number; options: Arguments; loaded: boolean }): void {
-    const { model, options, loaded } = args;
+  fromJSON(args: { model: number; problem: number; options: Arguments; loaded: boolean }): void {
+    const { model, problem, options, loaded } = args;
     this.model = model;
     this.options = options;
     this.loaded = loaded;
+    this.problem = problem;
   }
 
   /**
@@ -288,7 +290,7 @@ export class SVM {
    * Free the memory that was created by the compiled libsvm library to.
    * store the model. This model is reused every time the predict method is called.
    */
-  private free() {
+  public free() {
     if (this.problem) {
       this.free_problem(this.problem);
       this.problem = null;
