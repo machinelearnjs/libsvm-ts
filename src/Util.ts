@@ -1,5 +1,5 @@
 import { UtilError } from './Errors';
-import { CommandArguments } from './types/Commands';
+import { Arguments, KernelTypes } from './types/Commands';
 
 const mapOptionToCommand = {
   quiet: 'q',
@@ -53,16 +53,18 @@ const mapKernelTypesToValue = {
   PRECOMPUTED: '4',
 };
 
-export function getCommand(options: CommandArguments) {
-  let str = '';
+export function getCommand(options: Arguments): string {
+  let str: string = '';
   const keys = Object.keys(options);
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
-    if (options[key] == null) {
+    const command = mapOptionToCommand[key];
+    const option = options[key];
+    if (option == null) {
       continue;
     }
-    if (mapOptionToCommand[key] == null) {
-      throw new UtilError('Bad option');
+    if (command == null) {
+      throw UtilError('Bad option');
     }
 
     // Adding an empty space before append a new command
@@ -74,11 +76,11 @@ export function getCommand(options: CommandArguments) {
     switch (key) {
       case 'probabilityEstimates':
       case 'shrinking':
-        str += `-${mapOptionToCommand[key]} ${options[key] ? 1 : 0}`;
+        str += `-${command} ${options[key] ? 1 : 0}`;
         break;
       case 'quiet': {
         if (options[key]) {
-          str += `-${mapOptionToCommand[key]} 1`;
+          str += `-${command} 1`;
         }
         break;
       }
@@ -93,13 +95,13 @@ export function getCommand(options: CommandArguments) {
         break;
       }
       case 'kernel':
-        str += `-${mapOptionToCommand[key]} ${mapKernelTypesToValue[options[key]]}`;
+        str += `-${command} ${mapKernelTypesToValue[option]}`;
         break;
       case 'type':
-        str += `-${mapOptionToCommand[key]} ${mapSVMTypesToValue[options[key]]}`;
+        str += `-${command} ${mapSVMTypesToValue[option]}`;
         break;
       default: {
-        str += `-${mapOptionToCommand[key]} ${options[key]}`;
+        str += `-${command} ${options[key]}`;
         break;
       }
     }

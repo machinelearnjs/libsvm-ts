@@ -14,7 +14,7 @@ export enum KernelTypes {
   PRECOMPUTED = 'PRECOMPUTED',
 }
 
-export interface CommandArguments {
+export interface Arguments {
   quiet?: boolean;
   type?: SVMTypes;
   kernel?: KernelTypes;
