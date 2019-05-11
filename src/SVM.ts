@@ -6,6 +6,14 @@ import { SVMError, WASMError } from './Errors';
 import { Arguments } from './types/Commands';
 import { getCommand } from './Util';
 
+interface ProbabilityResult {
+  prediction: number;
+  estimates: Array<{
+    label: number;
+    probability: number;
+  }>;
+}
+
 export class SVM {
   private predict_one: (a: number, b: [] | Uint8Array, c: number) => number;
   private predict_one_probability: (a: number, b: [] | Uint8Array, c: number, d: number) => number;
@@ -104,7 +112,7 @@ export class SVM {
    * Predict a matrix
    * @param args
    */
-  predict(args: { samples: number[][] }) {
+  predict(args: { samples: number[][] }): number[] {
     const { samples } = args;
 
     const arr = [];
@@ -118,7 +126,7 @@ export class SVM {
    * Predict the label with probability estimate of many samples.
    * @param args
    */
-  predictProbability(args: { samples: number[][] }) {
+  predictProbability(args: { samples: number[][] }): ProbabilityResult[] {
     const { samples } = args;
 
     const arr = [];
@@ -133,7 +141,7 @@ export class SVM {
    * Predict the label with probability estimate.
    * @param args
    */
-  predictOneProbability(args: { sample: number[] }) {
+  predictOneProbability(args: { sample: number[] }): ProbabilityResult {
     const { sample } = args;
     const labels = this.getLabels();
     const nbLabels = labels.length;
@@ -144,8 +152,8 @@ export class SVM {
       sample.length,
       estimates,
     );
-    const estimatesArr = Array.from(this.libsvm.HEAPF64.subarray(estimates / 8, estimates / 8 + nbLabels));
-    const result = {
+    const estimatesArr: number[] = Array.from(this.libsvm.HEAPF64.subarray(estimates / 8, estimates / 8 + nbLabels));
+    const result: ProbabilityResult = {
       prediction,
       estimates: labels.map((label, idx) => ({
         label,
@@ -160,7 +168,13 @@ export class SVM {
    * Predict a regression value with a confidence interval
    * @param args
    */
-  predictOneInterval(args: { sample: number[]; confidence: number }) {
+  predictOneInterval(args: {
+    sample: number[];
+    confidence: number;
+  }): {
+    predicted: number;
+    interval: number[];
+  } {
     const { sample, confidence } = args;
     const interval = this.getInterval({ confidence });
     const predicted = this.predictOne({ sample });
@@ -174,10 +188,16 @@ export class SVM {
    * Predict regression values with confidence intervals
    * @param args
    */
-  predictInterval(args: { samples: number[][]; confidence: number }) {
+  predictInterval(args: {
+    samples: number[][];
+    confidence: number;
+  }): Array<{
+    predicted: number;
+    interval: number[];
+  }> {
     const { samples, confidence } = args;
     const interval = this.getInterval({ confidence });
-    const predicted = this.predict({ samples });
+    const predicted: number[] = this.predict({ samples });
     return predicted.map((pred) => ({
       predicted: pred,
       interval: [pred - interval, pred + interval],
@@ -187,7 +207,7 @@ export class SVM {
   /**
    * Get the array of labels from the model. Useful when creating an SVM instance with SVM.load
    */
-  getLabels() {
+  getLabels(): number[] {
     const nLabels = this.svm_get_nr_class(this.model);
     return this.getIntArrayFromModel({ fn: this.svm_get_labels, model: this.model, size: nLabels });
   }
@@ -207,7 +227,7 @@ export class SVM {
    * Load a model from a state
    * @param args
    */
-  fromJSON(args: { model: number; options: Arguments; loaded: boolean }) {
+  fromJSON(args: { model: number; options: Arguments; loaded: boolean }): void {
     const { model, options, loaded } = args;
     this.model = model;
     this.options = options;
@@ -323,12 +343,13 @@ export class SVM {
     return problem;
   }
 
-  private getIntArrayFromModel(args: { fn: (a: number, b: number) => void; model: number; size: number }) {
+  private getIntArrayFromModel(args: { fn: (a: number, b: number) => void; model: number; size: number }): number[] {
     const { fn, model, size } = args;
     const offset = this.libsvm._malloc(size * 4);
     fn(model, offset);
     const data = this.libsvm.HEAP32.subarray(offset / 4, offset / 4 + size);
-    const arr = Array.from(data);
+    // Casting any received from HEAP32 as number[]
+    const arr = Array.from(data) as number[];
     this.libsvm._free(offset);
     return arr;
   }
