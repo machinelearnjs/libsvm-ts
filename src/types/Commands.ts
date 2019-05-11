@@ -14,25 +14,6 @@ export enum KernelTypes {
   PRECOMPUTED = 'PRECOMPUTED',
 }
 
-/*
-export interface Arguments {
-  quiet?: boolean;
-  type?: SVMTypes;
-  kernel?: KernelTypes;
-  degree?: number;
-  gamma?: number;
-  coef0?: number;
-  cost?: number;
-  nu?: number;
-  epsilon?: number;
-  cacheSize?: number;
-  tolerance?: number;
-  shrinking?: boolean;
-  probabilityEstimates?: boolean;
-  weight?: { [n: number]: number };
-}
-*/
-
 export interface Arguments {
   quiet?: boolean;
   type?: SVMTypes;

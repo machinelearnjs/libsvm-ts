@@ -82,7 +82,7 @@ describe('SVM:asm', () => {
   });
 
   describe('.predict(...)', () => {
-    it.only('should predict bodyfat scake dataset using C_SVC and LINEAR', () => {
+    it('should predict bodyfat scale dataset using C_SVC and LINEAR', () => {
       const rawData = fs.readFileSync(path.join(__dirname, '../samples/bodyfat_scale.txt'), 'utf-8');
       const data = rawData.split('\n').map((line) => line.split(' ').filter((el) => el));
       const labels = data.map((line) => +line.splice(0, 1)[0]);
@@ -95,10 +95,13 @@ describe('SVM:asm', () => {
         quiet: true,
         probabilityEstimates: true,
       });
-
       svm.loadASM().then((loadedSVM) => {
         loadedSVM.train({ samples: features, labels });
-        loadedSVM.predict({ samples: [[1, 2], [3, 4]] });
+        const predResult = loadedSVM.predict({
+          samples: [features[0], features[1]],
+        });
+        const expected = [Math.floor(labels[0]), Math.floor(labels[1])];
+        expect(predResult).toEqual(expected);
       });
     });
   });
