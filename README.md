@@ -8,7 +8,7 @@
 
 # [DEMO](https://mljs.github.io/libsvm/)
 
-Port of to port libsvm v3.22 using [emscripten](https://github.com/kripken/emscripten) , for usage in the browser or nodejs. 2 build targets: asm and WebAssembly.
+Port of libsvm v3.22 using [emscripten](https://github.com/kripken/emscripten) and it targets browser or nodejs using asm and WebAssembly.
 
 What is libsvm?
 libsvm is a [c++ library](https://github.com/cjlin1/libsvm) developped by Chih-Chung Chang and Chih-Jen Lin that allows to do support vector machine (aka SVM) classification and regression.
@@ -37,12 +37,6 @@ The main entry point loads the WebAssembly build and is asynchronous.
 
 ```typescript
 import { SVM } from 'libsvm-ts';
-const svm = new SVM(); // ...
-```
-
-There is an alternative entry point if you want to use asm build. This entrypoint is synchronous.
-```js
-const SVM = require('libsvm-js/asm');
 const svm = new SVM(); // ...
 ```
 
