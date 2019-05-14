@@ -1,8 +1,9 @@
 {
   "name": "libsvm-ts",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A port of libsvm to Typescript using emscripten",
   "main": "build/index.js",
+  "typings": "build/index.d.ts",
   "files": [
     "src",
     "out",
