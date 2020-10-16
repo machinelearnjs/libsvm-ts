@@ -41,7 +41,7 @@ const svm = new SVM(); // ...
 ```
 
 ## Load in the browser
-The npm package contains a bundle for the browser that works with AMD and browser globals. There is one bundle for the asm build and another for the web assembly build. They are located in the `dist/browser` directory of the package. You can load them into your web page with a `script` tag. For the web assembly module, make sure that the libsvm.wasm file is served from the same relative path as the js file.
+The npm package contains a bundle for the browser that works with AMD and browser globals. There is one bundle for the asm build and another for the web assembly build. They are located in the `dist/browser` directory of the package. You can load them into your web page with a `script` tag. For the web assembly module, **make sure that the libsvm.wasm file is served from the same relative path** as the js file.
 
 ## Basic usage
 This example illustrates how to use the library to train and use an SVM classifier.
@@ -52,7 +52,8 @@ const svm = new SVM({
   type: 'C_SVC',
   kernel: 'RBF',
   gamma: 1,
-  cost: 1
+  cost: 1,
+  probabilityEstimates: true, // Set this to true if you want class probabilities
 });
 
 // This is the xor problem
@@ -65,6 +66,9 @@ svm.loadWASM().then((loadedSVM) => {
   // Also you can loadASM() instead of loadWASM()
   loadedSVM.train({ samples, labels });
   const predictedLabel = loadedSVM.predictOne([0.7, 0.8]);
+  /* or this if you want probabilities 
+  const predictedLabel = loadedSVM.predictOneProbability([0.7, 0.8]);
+  */
   console.log(predictedLabel) // 0
 });
 ```
