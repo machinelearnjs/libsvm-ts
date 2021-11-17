@@ -64,7 +64,7 @@ const labels = [0, 0, 1, 1];
 svm.loadWASM().then((loadedSVM) => {
   // Also you can loadASM() instead of loadWASM()
   loadedSVM.train({ samples, labels });
-  const predictedLabel = loadedSVM.predictOne([0.7, 0.8]);
+  const predictedLabel = loadedSVM.predictOne({ sample: [0.7, 0.8] });
   console.log(predictedLabel) // 0
 });
 ```
